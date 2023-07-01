@@ -9,11 +9,11 @@ namespace TheEscapists2
 
         private static GameObject Load;
         public static void Init()
-        {     
+        {
             Loader.Load = new GameObject();
             Loader.Load.AddComponent<Hacks>();
+            Loader.Load.AddComponent<Player>();
             UnityEngine.Object.DontDestroyOnLoad(Loader.Load);
-            FileLog.Log("Init");
         }
 
         public static void Unload()

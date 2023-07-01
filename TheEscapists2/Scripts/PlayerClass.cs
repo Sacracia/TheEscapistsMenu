@@ -3,17 +3,18 @@ using UnityEngine;
 
 namespace TheEscapists2
 {
-    internal class PlayerClass
+    internal class PlayerClass : MonoBehaviour
     {
+        static bool _godmode = false;
 
-        internal static float Strength
+        internal static int Strength
         {
             get
             {
                 Player player = Gamer.GetPrimaryGamer().m_PlayerObject;
                 if (!player)
-                    return 0f;
-                return player.m_CharacterStats.Strength;
+                    return 0;
+                return Mathf.RoundToInt(player.m_CharacterStats.Strength);
             }
             set
             {
@@ -24,14 +25,14 @@ namespace TheEscapists2
             }
         }
 
-        internal static float Cardio
+        internal static int Cardio
         {
             get
             {
                 Player player = Gamer.GetPrimaryGamer().m_PlayerObject;
                 if (!player)
-                    return 0f;
-                return player.m_CharacterStats.Cardio;
+                    return 0;
+                return Mathf.RoundToInt(player.m_CharacterStats.Cardio);
             }
             set
             {
@@ -42,14 +43,14 @@ namespace TheEscapists2
             }
         }
 
-        internal static float Intellect
+        internal static int Intellect
         {
             get
             {
                 Player player = Gamer.GetPrimaryGamer().m_PlayerObject;
                 if (!player)
-                    return 0f;
-                return player.m_CharacterStats.Intellect;
+                    return 0;
+                return Mathf.RoundToInt(player.m_CharacterStats.Intellect);
             }
             set
             {
@@ -62,21 +63,23 @@ namespace TheEscapists2
 
         internal static void Render()
         {
-            if (GUI.Button(new Rect(20, 20, 100, 20), "Max Strength"))
-                Strength = CharacterStats.MaxStrength;
-            Strength = GUI.HorizontalSlider(new Rect(20, 50, 50, 20), Strength, 0f, CharacterStats.MaxStrength);
-            Cardio = GUI.HorizontalSlider(new Rect(20, 80, 50, 20), Cardio, 0f, CharacterStats.MaxCardio);
-            Intellect = GUI.HorizontalSlider(new Rect(20, 110, 50, 20), Intellect, 0f, CharacterStats.MaxIntellect);
+            _godmode = GUILayout.Toggle(_godmode, "Godmode", new GUILayoutOption[0]);
+            GUILayout.Label($"Strength {Strength}", new GUILayoutOption[0]);
+            Strength = Mathf.RoundToInt(GUILayout.HorizontalSlider(Strength, 0f, CharacterStats.MaxStrength, new GUILayoutOption[0]));
+            GUILayout.Label($"Cardio {Cardio}", new GUILayoutOption[0]);
+            Cardio = Mathf.RoundToInt(GUILayout.HorizontalSlider(Cardio, 0f, CharacterStats.MaxCardio, new GUILayoutOption[0]));
+            GUILayout.Label($"Intellect {Intellect}", new GUILayoutOption[0]);
+            Intellect = Mathf.RoundToInt(GUILayout.HorizontalSlider(Intellect, 0f, CharacterStats.MaxIntellect, new GUILayoutOption[0]));
         }
 
-        [HarmonyPatch(typeof(CharacterStats), "DecreaseEnergyRPC")]
-        public class Patch1
+        public static void Update()
         {
-            [HarmonyPrefix]
-            public static bool Prefix(ref bool __result)
+            if (_godmode)
             {
-                __result = true;
-                return false;
+                Player player = Gamer.GetPrimaryGamer().m_PlayerObject;
+                if (!player)
+                    return;
+                Gamer.GetPrimaryGamer().m_PlayerObject.m_CharacterStats.Health = CharacterStats.MaxHealth;
             }
         }
     }

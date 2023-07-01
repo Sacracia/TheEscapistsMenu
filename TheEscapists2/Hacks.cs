@@ -6,13 +6,13 @@ namespace TheEscapists2
     internal class Hacks : MonoBehaviour
     {
         private bool _show = true;
-        Rect windowRect = new Rect(10f, 10f, 500f, 400f);
+        Rect _windowPlayer = new Rect(10f, 10f, 250f, 400f);
 
         public void OnGUI()
         {
             if (_show)
             {
-                windowRect = GUI.Window(0, windowRect, ShowWindow, "Cheat Menu");
+                _windowPlayer = GUILayout.Window(0, _windowPlayer, ShowWindow, "Player", new GUILayoutOption[0]);
             }
         }
 
@@ -24,13 +24,11 @@ namespace TheEscapists2
 
         public void Start()
         {
-            FileLog.Log("Start");
-            Harmony harmony = new Harmony("te.mod.sacri");
-            harmony.PatchAll();
         }
 
         public void Update()
         {
+            PlayerClass.Update();
             if (Input.GetKeyDown(KeyCode.Insert))
             {
                 _show = !_show;
