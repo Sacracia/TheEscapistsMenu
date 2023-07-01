@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using HarmonyLib;
 
 namespace TheEscapists2
 {
@@ -23,7 +24,9 @@ namespace TheEscapists2
 
         public void Start()
         {
-
+            FileLog.Log("Start");
+            Harmony harmony = new Harmony("te.mod.sacri");
+            harmony.PatchAll();
         }
 
         public void Update()
