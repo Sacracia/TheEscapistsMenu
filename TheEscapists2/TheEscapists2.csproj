@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\ItemClass.cs" />
     <Compile Include="Scripts\PlayerClass.cs" />
+    <Compile Include="Scripts\Trash.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

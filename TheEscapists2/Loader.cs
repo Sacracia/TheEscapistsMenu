@@ -11,6 +11,7 @@ namespace TheEscapists2
         public static void Init()
         {
             harmony = new Harmony("te2.mod.sacracia");
+            //harmony.PatchAll();
             Loader.Load = new GameObject();
             Loader.Load.AddComponent<Hacks>();
             Loader.Load.AddComponent<PlayerClass>();

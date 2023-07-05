@@ -82,7 +82,6 @@ namespace TheEscapists2
 
         internal static void Render()
         {
-            //_godmode = GUILayout.Toggle(_godmode, "Godmode", new GUILayoutOption[0]);
             bool _flag = GUILayout.Toggle(_godmode, "Godmode", new GUILayoutOption[0]);
             _infEnergy = GUILayout.Toggle(_infEnergy, "Max Stamina", new GUILayoutOption[0]);
             _zeroHeat = GUILayout.Toggle(_zeroHeat, "No Heat", new GUILayoutOption[0]);
