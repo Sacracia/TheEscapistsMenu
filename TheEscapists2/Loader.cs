@@ -11,11 +11,13 @@ namespace TheEscapists2
         public static void Init()
         {
             harmony = new Harmony("te2.mod.sacracia");
-            //harmony.PatchAll();
-            Loader.Load = new GameObject();
-            Loader.Load.AddComponent<Hacks>();
-            Loader.Load.AddComponent<PlayerClass>();
-            UnityEngine.Object.DontDestroyOnLoad(Loader.Load);
+            Load = new GameObject();
+            Load.AddComponent<Hacks>();
+            Load.AddComponent<PlayerMenu>();
+            Load.AddComponent<GeneralMenu>();
+            Load.AddComponent<PrisonMenu>();
+            Load.AddComponent<JobMenu>();
+            Object.DontDestroyOnLoad(Load);
         }
 
         public static void Unload()
@@ -25,8 +27,7 @@ namespace TheEscapists2
 
         private static void _Unload()
         {
-
-            GameObject.Destroy(Load);
+            Object.Destroy(Load);
             harmony.UnpatchAll();
         }
     }
