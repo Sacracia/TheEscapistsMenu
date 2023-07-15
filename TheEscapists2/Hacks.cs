@@ -9,9 +9,9 @@ namespace TheEscapists2
         {
             if (Input.GetKeyDown(KeyCode.Insert))
             {
-                GeneralMenu._visible = !GeneralMenu._visible;
-                PlayerMenu._visible = !PlayerMenu._visible;
-                PrisonMenu._visible = !PrisonMenu._visible;
+                GeneralMenu.visible = !GeneralMenu.visible;
+                PlayerMenu.visible = !PlayerMenu.visible;
+                PrisonMenu.visible = !PrisonMenu.visible;
             }
             else if (Input.GetKeyDown(KeyCode.Delete))
             {

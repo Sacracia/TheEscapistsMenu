@@ -8,7 +8,7 @@ namespace TheEscapists2
 {
     internal class PrisonMenu : MonoBehaviour
     {
-        internal static bool _visible = true;
+        internal static bool visible = true;
         private bool _detectorActive = false;
         private bool _checkMissingKey = false;
         private bool _freezeTimer = false;
@@ -17,7 +17,7 @@ namespace TheEscapists2
 
         public void OnGUI()
         {
-            if (!_visible)
+            if (!visible)
                 return;
             window = GUILayout.Window(1, window, OnWindow, "Prisons", new GUILayoutOption[0]);
         }
@@ -127,7 +127,7 @@ namespace TheEscapists2
 
             if (GUILayout.Button("Apply for a job >>", new GUILayoutOption[0]))
             {
-                JobMenu._visible = !JobMenu._visible;
+                JobMenu.visible = !JobMenu.visible;
                 JobMenu.window.x = window.x + 260f;
                 JobMenu.window.y = window.y + 300f;
             }

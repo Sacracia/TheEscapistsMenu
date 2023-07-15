@@ -5,7 +5,7 @@ namespace TheEscapists2
 {
     internal class PlayerMenu : MonoBehaviour
     {
-        internal static bool _visible = true;
+        internal static bool visible = true;
         private bool _infEnergy = false;
         private bool _zeroHeat = false;
         private bool _teleport = false;
@@ -87,7 +87,7 @@ namespace TheEscapists2
 
         public void OnGUI()
         {
-            if (!_visible)
+            if (!visible)
                 return;
             window = GUILayout.Window(0, window, OnWindow, "Player", new GUILayoutOption[0]);
         }

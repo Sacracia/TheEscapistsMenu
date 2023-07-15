@@ -6,14 +6,14 @@ namespace TheEscapists2
 {
     internal class JobMenu : MonoBehaviour
     {
-        internal static bool _visible = false;
+        internal static bool visible = false;
         private List<BaseJob> _jobs;
         private float _lastCacheTime = Time.time + 3f;
         internal static Rect window = new Rect(300f,300f,300f,300f);
 
         public void OnGUI()
         {
-            if (!_visible)
+            if (!visible || !PrisonMenu.visible)
                 return;
             window = GUILayout.Window(3, window, OnWindow, "Jobs", new GUILayoutOption[0]);
         }
@@ -37,7 +37,7 @@ namespace TheEscapists2
 
         public void Update()
         {
-            if (Time.time >= _lastCacheTime && _visible)
+            if (Time.time >= _lastCacheTime && visible)
             {
                 _lastCacheTime = Time.time + 3f;
                 _jobs = Traverse.Create(JobsManager.GetInstance()).Field("m_Jobs").GetValue() as List<BaseJob>;

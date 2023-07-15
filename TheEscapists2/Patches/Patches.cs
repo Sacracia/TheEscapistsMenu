@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Slate.ActionClips;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +40,11 @@ namespace TheEscapists2
         //[HarmonyPrefix]
         public static bool JoinWithoutPassword(LobbyRoomInfoObject lobby)
         {
+            string passwordDecrypted = Encryption.Decrypt(lobby.m_Password, "default", "of all the flavours you choose to be salty", "SHA1", 2, 256);
+            GeneralMenu.room.Set(lobby.m_RoomName.text, lobby.m_LevelName.text, passwordDecrypted, lobby);
             T17NetRoomListManager.NetPhotonRoom m_Room = Traverse.Create(lobby).Field("m_Room").GetValue() as T17NetRoomListManager.NetPhotonRoom;
             var deleg = System.Delegate.CreateDelegate(typeof(NetJoinRoomHelper.JoinRoomHandler), lobby, "OnJoinedRoomResult") as NetJoinRoomHelper.JoinRoomHandler;
-            NetJoinRoomHelper.JoinRoom(m_Room.Name, false, deleg, true, true);
+            NetJoinRoomHelper.JoinRoom(m_Room.Name, false, deleg, false, false); //last two settings for invisible connection
             return false;
         }
 
@@ -65,6 +68,14 @@ namespace TheEscapists2
         public static void FOV(ref float __result)
         {
             __result *= PlayerMenu.fov;
+        }
+
+        //[HarmonyPatch(typeof(NetUserManager), "RPC_HandleKicked")]
+        //[HarmonyPrefix]
+        public static bool AntiKick()
+        {
+            Debug.LogError("Users try to kick you but fail...");
+            return false;
         }
     }
 }
