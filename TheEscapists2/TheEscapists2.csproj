@@ -70,8 +70,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\GeneralMenu.cs" />
     <Compile Include="UI\JobMenu.cs" />
+    <Compile Include="UI\OutfitMenu.cs" />
     <Compile Include="UI\PlayerMenu.cs" />
     <Compile Include="UI\PrisonMenu.cs" />
+    <Compile Include="UI\WeaponMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

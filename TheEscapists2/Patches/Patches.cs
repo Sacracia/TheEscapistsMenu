@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using Slate.ActionClips;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheEscapists2
@@ -41,10 +39,11 @@ namespace TheEscapists2
         public static bool JoinWithoutPassword(LobbyRoomInfoObject lobby)
         {
             string passwordDecrypted = Encryption.Decrypt(lobby.m_Password, "default", "of all the flavours you choose to be salty", "SHA1", 2, 256);
-            GeneralMenu.room.Set(lobby.m_RoomName.text, lobby.m_LevelName.text, passwordDecrypted, lobby);
+            GeneralMenu.room.Set(lobby.m_RoomName.text, lobby.m_LevelName.text, passwordDecrypted);
+            PhotonNetwork.player.NickName = lobby.m_RoomName.text;
             T17NetRoomListManager.NetPhotonRoom m_Room = Traverse.Create(lobby).Field("m_Room").GetValue() as T17NetRoomListManager.NetPhotonRoom;
             var deleg = System.Delegate.CreateDelegate(typeof(NetJoinRoomHelper.JoinRoomHandler), lobby, "OnJoinedRoomResult") as NetJoinRoomHelper.JoinRoomHandler;
-            NetJoinRoomHelper.JoinRoom(m_Room.Name, false, deleg, false, false); //last two settings for invisible connection
+            NetJoinRoomHelper.JoinRoom(m_Room.Name, false, deleg, true, true);
             return false;
         }
 

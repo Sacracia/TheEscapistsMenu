@@ -17,6 +17,8 @@ namespace TheEscapists2
             Load.AddComponent<GeneralMenu>();
             Load.AddComponent<PrisonMenu>();
             Load.AddComponent<JobMenu>();
+            Load.AddComponent<OutfitMenu>();
+            Load.AddComponent<WeaponMenu>();
             Object.DontDestroyOnLoad(Load);
         }
 

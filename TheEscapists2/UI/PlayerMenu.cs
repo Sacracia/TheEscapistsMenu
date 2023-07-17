@@ -81,7 +81,7 @@ namespace TheEscapists2
                     return;
                 player.m_CharacterMovement.m_fMaxSpeed = 5f * value;
                 player.m_CharacterMovement.m_fMaxSpeedBlocking = 1f * value * value;
-                player.m_CharacterMovement.m_fMaxSpeedDashing = 1f * value > 20f ? 20f : 1f * value;
+                player.m_CharacterMovement.m_fMaxSpeedDashing = 8f * value > 32f ? 32f : 8f * value;
             }
         }
 
@@ -177,6 +177,7 @@ namespace TheEscapists2
             }
             fov = GUILayout.HorizontalSlider(fov, 0.1f, 2f, new GUILayoutOption[0]);
             GUILayout.EndHorizontal();
+            
             flag  = GUILayout.Toggle(_invisible, "Invisible");
             if (flag != _invisible)
             {

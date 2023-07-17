@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TheEscapists2
 {
@@ -125,11 +126,13 @@ namespace TheEscapists2
                 }
             }
 
+            if (GUILayout.Button("Calm dogs", new GUILayoutOption[0]))
+                DogsForgetEverything();
             if (GUILayout.Button("Apply for a job >>", new GUILayoutOption[0]))
             {
                 JobMenu.visible = !JobMenu.visible;
                 JobMenu.window.x = window.x + 260f;
-                JobMenu.window.y = window.y + 300f;
+                JobMenu.window.y = window.y + 310f;
             }
         }
 
@@ -137,6 +140,7 @@ namespace TheEscapists2
         {
             if (!PlayerMenu.player)
                 return;
+            T17NetManager.IsMasterClient = true;
             List<Character> characters = Character.GetAllCharacters();
             foreach (Character character in characters)
             {
@@ -193,6 +197,14 @@ namespace TheEscapists2
                 door.SetForceOpen(true);
                 DoorManager.GetInstance().SetUpCharacterKeys(PlayerMenu.player);
             }
+        }
+
+        private void DogsForgetEverything()
+        {
+            if (PlayerMenu.player == null)
+                return;
+            foreach (AICharacter character in NPCManager.GetInstance().m_Doggies)
+                character?.ForgetEverything();
         }
     }
 }

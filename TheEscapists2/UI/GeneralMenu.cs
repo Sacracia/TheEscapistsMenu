@@ -7,17 +7,15 @@ namespace TheEscapists2
     {
         internal struct RoomInfo
         {
-            public LobbyRoomInfoObject Lobby;
             public string Name;
             public string LevelName;
             public string Password;
 
-            public void Set(string name, string levelname, string password, LobbyRoomInfoObject lobby)
+            public void Set(string name, string levelname, string password)
             {
                 Name = name;
                 LevelName = levelname;
                 Password = password;
-                Lobby = lobby;
             }
         }
 
@@ -76,6 +74,20 @@ namespace TheEscapists2
                 }
             }
 
+            if (_throPassword)
+            {
+                GUILayout.BeginVertical();
+                GUILayout.Label("Last Server Info:", new GUILayoutOption[0]);
+                GUILayout.Label($"Name: {room.Name}", new GUILayoutOption[0]);
+                GUILayout.Label($"Level: {room.LevelName}", new GUILayoutOption[0]);
+                GUILayout.Label($"Password: {room.Password}", new GUILayoutOption[0]);
+                if (GUILayout.Button("Reconnect", new GUILayoutOption[0]))
+                {
+                    NetConnectAndJoinRoom.Init_OnlineMode_JoinSpecific(room.Name);
+                }
+                GUILayout.EndVertical();
+            }
+
             if (GUILayout.Button("Unlock all maps", new GUILayoutOption[0]))
             {
                 ProgressManager progressManager = ProgressManager.GetInstance();
@@ -84,18 +96,6 @@ namespace TheEscapists2
                 foreach (ProgressMilestone progressMilestone in progressManager.m_Milestones)
                     progressManager.SetMilestoneAchieved(progressMilestone.id, true);
             }
-
-            GUILayout.BeginVertical();
-            GUILayout.Label("Last Server Info:", new GUILayoutOption[0]);
-            GUILayout.Label($"Name: {room.Name}", new GUILayoutOption[0]);
-            GUILayout.Label($"Level: {room.LevelName}", new GUILayoutOption[0]);
-            GUILayout.Label($"Password: {room.Password}", new GUILayoutOption[0]);
-            if (GUILayout.Button("Reconnect", new GUILayoutOption[0]) && room.Lobby)
-            {
-                var deleg = System.Delegate.CreateDelegate(typeof(NetJoinRoomHelper.JoinRoomHandler), room.Lobby, "OnJoinedRoomResult") as NetJoinRoomHelper.JoinRoomHandler;
-                NetJoinRoomHelper.JoinRoom(room.Name, false, deleg, false, false); //last two settings for invisible connection
-            }
-            GUILayout.EndVertical();
         }
     }
 }
