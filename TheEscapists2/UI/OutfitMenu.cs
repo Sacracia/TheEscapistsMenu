@@ -7,7 +7,7 @@ namespace TheEscapists2
     internal class OutfitMenu : MonoBehaviour
     {
         internal static bool visible = true;
-        private Rect window = new Rect(10f, 430f, 200f, 150f);
+        private Rect window = new Rect(10f, 480f, 200f, 150f);
 
         public void OnGUI()
         {

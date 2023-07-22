@@ -7,7 +7,7 @@ namespace TheEscapists2
     {
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Insert))
+            if (Input.GetKeyDown(KeyCode.BackQuote))
             {
                 GeneralMenu.visible = !GeneralMenu.visible;
                 PlayerMenu.visible = !PlayerMenu.visible;

@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TheEscapists2
 {
@@ -14,13 +12,15 @@ namespace TheEscapists2
         private bool _checkMissingKey = false;
         private bool _freezeTimer = false;
         private bool _speedUpTime = false;
+        private bool _fastOpenDesk = false;
+        private bool _noAlertnessPenalties = false;
         private Rect window = new Rect(270f, 10f, 250f, 400f);
 
         public void OnGUI()
         {
             if (!visible)
                 return;
-            window = GUILayout.Window(1, window, OnWindow, "Prisons", new GUILayoutOption[0]);
+            window = GUILayout.Window(1, window, OnWindow, "Prison", new GUILayoutOption[0]);
         }
 
         void OnWindow(int windowID)
@@ -39,9 +39,24 @@ namespace TheEscapists2
                 UnlockDoors();
             if (GUILayout.Button("Teleport to current routine", new GUILayoutOption[0]))
                 TeleportToRoutine();
-            if (GUILayout.Button("Complete Job", new GUILayoutOption[0]))
-                Gamer.GetPrimaryGamer().m_PlayerObject?.SetJobComplete(true);
-            
+
+            bool _flag = GUILayout.Toggle(_noAlertnessPenalties, "No missing routine penalty", new GUILayoutOption[0]);
+            if (_flag != _noAlertnessPenalties)
+            {
+                _noAlertnessPenalties = _flag;
+                if (_flag)
+                {
+                    var original = AccessTools.Method(typeof(Character), "RPC_RoutineMissedAlertness");
+                    var mPrefix = SymbolExtensions.GetMethodInfo(() => Patches.AlertnessPenalties());
+                    Loader.harmony.Patch(original, new HarmonyMethod(mPrefix));
+                }
+                else
+                {
+                    var original = AccessTools.Method(typeof(Character), "RPC_RoutineMissedAlertness");
+                    Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
+                }
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("-", new GUILayoutOption[0]))
                 PrisonAlertnessManager.GetInstance()?.DecrementAlertnessBy(1);
@@ -54,7 +69,7 @@ namespace TheEscapists2
                 TurnPowerOff();
             
             //Turn off detectors
-            bool _flag = GUILayout.Toggle(_detectorActive, "Detectors do not work", new GUILayoutOption[0]);
+            _flag = GUILayout.Toggle(_detectorActive, "Detectors do not work", new GUILayoutOption[0]);
             if (_flag != _detectorActive)
             {
                 _detectorActive = _flag;
@@ -73,14 +88,21 @@ namespace TheEscapists2
             
             if (GUILayout.Button("Escape", new GUILayoutOption[0]))
                 EscapePrisonFunctionality.GetInstance().TriggerEscape();
+            
             if (GUILayout.Button("Free Craft", new GUILayoutOption[0]))
             {
                 CraftManager craftManager = CraftManager.GetInstance();
                 if (craftManager != null)
                 {
                     List<CraftManager.Recipe> currentRecipes = craftManager.GetCurrentRecipes();
-                    for (int num2 = 0; num2 < currentRecipes.Count; num2++)
-                        currentRecipes.ElementAt(num2).m_Ingredients = new ItemData[3];
+                    for (int i = 0; i < currentRecipes.Count; i++)
+                    {
+                        CraftManager.Recipe recipe = currentRecipes.ElementAt(i);
+                        if (recipe == null)
+                            continue;
+                        recipe.m_Ingredients = new ItemData[3];
+                        recipe.m_IngredientsToBeDestroyed = new bool[3];
+                    }
                 }
             }
             
@@ -128,6 +150,24 @@ namespace TheEscapists2
 
             if (GUILayout.Button("Calm dogs", new GUILayoutOption[0]))
                 DogsForgetEverything();
+
+            _flag = GUILayout.Toggle(_fastOpenDesk, "Fast open desks", new GUILayoutOption[0]);
+            if (_flag != _fastOpenDesk)
+            {
+                _fastOpenDesk = _flag;
+                if (_flag)
+                {
+                    var original = AccessTools.Method(typeof(DeskInteraction), "UpdateInteraction");
+                    var mPrefix = SymbolExtensions.GetMethodInfo(() => Patches.FastOpenDesk(null));
+                    Loader.harmony.Patch(original, new HarmonyMethod(mPrefix));
+                }
+                else
+                {
+                    var original = AccessTools.Method(typeof(DeskInteraction), "UpdateInteraction");
+                    Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
+                }
+            }
+
             if (GUILayout.Button("Apply for a job >>", new GUILayoutOption[0]))
             {
                 JobMenu.visible = !JobMenu.visible;
@@ -140,13 +180,13 @@ namespace TheEscapists2
         {
             if (!PlayerMenu.player)
                 return;
-            T17NetManager.IsMasterClient = true;
-            List<Character> characters = Character.GetAllCharacters();
-            foreach (Character character in characters)
+            var m_AICharacters = NPCManager.GetInstance().m_AICharacters;
+            foreach (AICharacter AICharacter in m_AICharacters)
             {
+                Character character = AICharacter.m_Character;
                 if (character != PlayerMenu.player && (character.m_CharacterRole == CharacterRole.Inmate || character.m_CharacterRole == CharacterRole.Guard
                     || character.m_CharacterRole == CharacterRole.Warden || character.m_CharacterRole == CharacterRole.Dog))
-                    character.SetIsKnockedOut(true, PlayerMenu.player);
+                    PlayerMenu.player.DamageCharacter(character, 9999f, -1, false, Character.GamelogicRunModes.All);
             }
         }
 
@@ -184,18 +224,22 @@ namespace TheEscapists2
     
         private void UnlockDoors()
         {
-            if (PlayerMenu.player == null)
+            Player player = Gamer.GetPrimaryGamer().m_PlayerObject;
+            if (player == null)
                 return;
             DoorManager doorManager = DoorManager.GetInstance();
             if (doorManager == null)
                 return;
-            List<Door> doors = typeof(DoorManager).GetField("m_AllDoors", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(doorManager)
-                as List<Door>;
-            foreach (Door door in doors)
+            FastList<Door> m_AllDoors = Traverse.Create(doorManager).Field("m_AllDoors").GetValue() as FastList<Door>;
+            for (int i = 0; i < m_AllDoors.Count; i++)
             {
-                PlayerMenu.player.AddAllowedDoor(door, null);
-                door.SetForceOpen(true);
-                DoorManager.GetInstance().SetUpCharacterKeys(PlayerMenu.player);
+                Door door = m_AllDoors[i];
+                if (door != null)
+                {
+                    player.AddAllowedDoor(door, null);
+                    door.SetForceOpen(true);
+                    DoorManager.GetInstance().SetUpCharacterKeys(player);
+                }
             }
         }
 

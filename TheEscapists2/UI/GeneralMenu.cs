@@ -73,6 +73,11 @@ namespace TheEscapists2
                     Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
                 }
             }
+            
+            if (GUILayout.Button("Become host", new GUILayoutOption[0]))
+            {
+                PhotonNetwork.SetMasterClient(PhotonNetwork.player);
+            }
 
             if (_throPassword)
             {
@@ -81,12 +86,14 @@ namespace TheEscapists2
                 GUILayout.Label($"Name: {room.Name}", new GUILayoutOption[0]);
                 GUILayout.Label($"Level: {room.LevelName}", new GUILayoutOption[0]);
                 GUILayout.Label($"Password: {room.Password}", new GUILayoutOption[0]);
-                if (GUILayout.Button("Reconnect", new GUILayoutOption[0]))
-                {
-                    NetConnectAndJoinRoom.Init_OnlineMode_JoinSpecific(room.Name);
-                }
                 GUILayout.EndVertical();
             }
+
+            if (GUILayout.Button("Bind players", new GUILayoutOption[0]))
+                BindPlayers();
+
+            if (GUILayout.Button("Own Players Desks", new GUILayoutOption[0]))
+                OwnPlayerDesks();
 
             if (GUILayout.Button("Unlock all maps", new GUILayoutOption[0]))
             {
@@ -94,8 +101,33 @@ namespace TheEscapists2
                 if (progressManager == null)
                     return;
                 foreach (ProgressMilestone progressMilestone in progressManager.m_Milestones)
-                    progressManager.SetMilestoneAchieved(progressMilestone.id, true);
+                    progressManager?.SetMilestoneAchieved(progressMilestone.id, true);
             }
+        }
+
+        private void BindPlayers()
+        {
+            Gamer[] gamers = Gamer.GetAllGamers();
+            Player localPlayer = Gamer.GetPrimaryGamer().m_PlayerObject;
+            ItemManager itemManager = ItemManager.GetInstance();
+            if (localPlayer == null || itemManager == null)
+                return;
+            Item item = itemManager.GetItemFromUsedList(0);
+            if (item == null)
+                return;
+            foreach (Gamer gamer in gamers)
+                if (gamer != null && gamer.m_PlayerObject != localPlayer)
+                    gamer.m_PlayerObject.BindRPC(item, 9999f, localPlayer);
+        }
+
+        private void OwnPlayerDesks()
+        {
+            Player localPlayer = Gamer.GetPrimaryGamer().m_PlayerObject;
+            if (localPlayer == null) 
+                return;
+            var desks = DeskInteraction.GetPlayerDesks();
+            foreach (var desk in desks)
+                desk?.SetOwner(localPlayer);
         }
     }
 }

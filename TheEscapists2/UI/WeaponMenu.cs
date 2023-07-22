@@ -61,7 +61,6 @@ namespace TheEscapists2
             Stungun = 369,
             SuperBat = 375,
             CombBlade = 138,
-            GrapplingHook = 210,
             SuperKnuckle = 376,
             Sledgehammer = 269,
             Spear = 270,

@@ -14,6 +14,8 @@ namespace TheEscapists2
         private bool _oneHitKill = false;
         private bool _fov = false;
         private bool _invisible = false;
+        private bool _fury = false;
+        private bool _maxItemHealth = false;
         private float _lastCacheTime = Time.time + 3f;
         private Rect window = new Rect(10f, 10f, 250f, 400f);
         internal static float fov = 1f;
@@ -125,13 +127,13 @@ namespace TheEscapists2
                 if (flag)
                 {
                     float dmg = 0f;
-                    var original = AccessTools.Method(typeof(Character), "DamageCharacterEvent");
+                    var original = AccessTools.Method(typeof(Player), "DamageCharacter");
                     var mPrefix = SymbolExtensions.GetMethodInfo(() => Patches.OneHitKill(null, null, ref dmg));
                     Loader.harmony.Patch(original, new HarmonyMethod(mPrefix));
                 }
                 else
                 {
-                    var original = AccessTools.Method(typeof(Character), "DamageCharacterEvent");
+                    var original = AccessTools.Method(typeof(Player), "DamageCharacter");
                     Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
                 }
             }
@@ -149,6 +151,8 @@ namespace TheEscapists2
 
             if (GUILayout.Button("Add 100$", new GUILayoutOption[0]) && player != null)
                 player.m_CharacterStats.IncreaseMoney(100f);
+            if (GUILayout.Button("Regain Consciousness", new GUILayoutOption[0]) && player != null)
+                player.RegainConsciousness();
             GUILayout.Label($"Strength {Strength}", new GUILayoutOption[0]);
             Strength = Mathf.RoundToInt(GUILayout.HorizontalSlider(Strength, 0f, CharacterStats.MaxStrength, new GUILayoutOption[0]));
             GUILayout.Label($"Cardio {Cardio}", new GUILayoutOption[0]);
@@ -184,6 +188,41 @@ namespace TheEscapists2
                 _invisible = flag;
                 if (player != null)
                     player.m_bIsHidden = flag;
+            }
+
+            flag = GUILayout.Toggle(_maxItemHealth, "Infinite item health");
+            if (flag != _maxItemHealth)
+            {
+                _maxItemHealth = flag;
+                if (flag)
+                {
+                    var original = AccessTools.Method(typeof(Item), "DecreaseHealth");
+                    var mPrefix = SymbolExtensions.GetMethodInfo(() => Patches.DecreaseHealth(null));
+                    Loader.harmony.Patch(original, new HarmonyMethod(mPrefix));
+                }
+                else
+                {
+                    var original = AccessTools.Method(typeof(Item), "DecreaseHealth");
+                    Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
+                }
+            }
+
+            flag = GUILayout.Toggle(_fury, "Fists of fury");
+            if (flag != _fury)
+            {
+                _fury = flag;
+                if (flag)
+                {
+                    Item_Combat temp = null;
+                    var original = AccessTools.Method(typeof(Character), "GetItemCombat");
+                    var mPrefix = SymbolExtensions.GetMethodInfo(() => Patches.FistsOfFury(null, ref temp));
+                    Loader.harmony.Patch(original, new HarmonyMethod(mPrefix));
+                }
+                else
+                {
+                    var original = AccessTools.Method(typeof(Character), "GetItemCombat");
+                    Loader.harmony.Unpatch(original, HarmonyPatchType.Prefix);
+                }
             }
         }
         
