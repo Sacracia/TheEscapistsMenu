@@ -120,7 +120,7 @@ namespace TheEscapists2
                 }
             }
             
-            flag = GUILayout.Toggle(_oneHitKill, "One Hit Kills", new GUILayoutOption[0]);
+            flag = GUILayout.Toggle(_oneHitKill, "One hit kills", new GUILayoutOption[0]);
             if (flag != _oneHitKill)
             {
                 _oneHitKill = flag;
@@ -138,16 +138,16 @@ namespace TheEscapists2
                 }
             }
 
-            flag = GUILayout.Toggle(_noCollide, "No Collision", new GUILayoutOption[0]);
+            flag = GUILayout.Toggle(_noCollide, "No collision", new GUILayoutOption[0]);
             if (flag != _noCollide && player)
             {
                 _noCollide = flag;
                 PlayerMenu.player.m_PhysicsSphereCol.enabled = !flag;
             }
             
-            _infEnergy = GUILayout.Toggle(_infEnergy, "Max Stamina", new GUILayoutOption[0]);
-            _zeroHeat = GUILayout.Toggle(_zeroHeat, "No Heat", new GUILayoutOption[0]);
-            _teleport = GUILayout.Toggle(_teleport, "Enable Teleport (F1)", new GUILayoutOption[0]);
+            _infEnergy = GUILayout.Toggle(_infEnergy, "Max stamina", new GUILayoutOption[0]);
+            _zeroHeat = GUILayout.Toggle(_zeroHeat, "No heat", new GUILayoutOption[0]);
+            _teleport = GUILayout.Toggle(_teleport, "Enable teleport (F1)", new GUILayoutOption[0]);
 
             if (GUILayout.Button("Add 100$", new GUILayoutOption[0]) && player != null)
                 player.m_CharacterStats.IncreaseMoney(100f);

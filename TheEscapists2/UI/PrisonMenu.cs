@@ -87,7 +87,7 @@ namespace TheEscapists2
             if (GUILayout.Button("Escape", new GUILayoutOption[0]))
                 EscapePrisonFunctionality.GetInstance().TriggerEscape();
             
-            if (GUILayout.Button("Free Craft", new GUILayoutOption[0]))
+            if (GUILayout.Button("Free craft", new GUILayoutOption[0]))
             {
                 CraftManager craftManager = CraftManager.GetInstance();
                 if (craftManager != null)
@@ -121,7 +121,7 @@ namespace TheEscapists2
                 }
             }
             
-            _flag = GUILayout.Toggle(_freezeTimer, "Freeze Timer", new GUILayoutOption[0]);
+            _flag = GUILayout.Toggle(_freezeTimer, "Freeze timer", new GUILayoutOption[0]);
             if (_flag != _freezeTimer)
             {
                 _freezeTimer = _flag;

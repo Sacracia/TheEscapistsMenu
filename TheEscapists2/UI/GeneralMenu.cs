@@ -82,7 +82,7 @@ namespace TheEscapists2
             if (_throPassword)
             {
                 GUILayout.BeginVertical();
-                GUILayout.Label("Last Server Info:", new GUILayoutOption[0]);
+                GUILayout.Label("Last server info:", new GUILayoutOption[0]);
                 GUILayout.Label($"Name: {room.Name}", new GUILayoutOption[0]);
                 GUILayout.Label($"Level: {room.LevelName}", new GUILayoutOption[0]);
                 GUILayout.Label($"Password: {room.Password}", new GUILayoutOption[0]);
@@ -92,7 +92,7 @@ namespace TheEscapists2
             if (GUILayout.Button("Bind players", new GUILayoutOption[0]))
                 BindPlayers();
 
-            if (GUILayout.Button("Own Players Desks", new GUILayoutOption[0]))
+            if (GUILayout.Button("Own players desks", new GUILayoutOption[0]))
                 OwnPlayerDesks();
 
             if (GUILayout.Button("Unlock all maps", new GUILayoutOption[0]))
