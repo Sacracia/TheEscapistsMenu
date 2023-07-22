@@ -1,12 +1,14 @@
-﻿using System.Reflection;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheEscapists2
 {
     internal class Hacks : MonoBehaviour
     {
+        private float _lastCacheTime = Time.time + 60f;
+
         public void Update()
         {
+            //PhotonNetwork.offlineMode = true;
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
                 GeneralMenu.visible = !GeneralMenu.visible;
@@ -17,20 +19,17 @@ namespace TheEscapists2
             }
         }
 
-        internal static bool SendChatMessage(string message)
+        internal static void SendChatMessage(string message, ChatFeedManager.MessageTag tag)
         {
             try
             {
-                var chat = ChatFeedManager.GetInstance();
-                if (chat == null)
-                    return false;
-                chat.GetType().GetMethod("SendMessageToHUD", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Invoke(ChatFeedManager.GetInstance(), new object[1] { message });
-                return true;
+                Gamer gamer = Gamer.GetPrimaryGamer();
+                ChatFeedManager chatFeedManager = ChatFeedManager.GetInstance();
+                chatFeedManager?.SendChatMessage_RPC(gamer, message, tag, false);
             }
             catch
             {
-                return false;
+                
             }
         }
     }

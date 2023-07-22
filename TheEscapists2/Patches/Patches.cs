@@ -72,7 +72,8 @@ namespace TheEscapists2
         //[HarmonyPrefix]
         public static bool AntiKick()
         {
-            Hacks.SendChatMessage("Users try to kick you but fail...");
+            Hacks.SendChatMessage("Athena defends me from kicking!", 
+                ChatFeedManager.MessageTag.System);
             return false;
         }
 
