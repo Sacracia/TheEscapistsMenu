@@ -31,8 +31,6 @@ namespace TheEscapists2
 
         private void DrawElements()
         {
-            if (GUILayout.Button("Knock out everyone", new GUILayoutOption[0]))
-                KnockoutEveryone();
             if (GUILayout.Button("Set opinions to max", new GUILayoutOption[0]))
                 SetOpinions();
             if (GUILayout.Button("Unlock doors for player", new GUILayoutOption[0]) && PlayerMenu.player)
