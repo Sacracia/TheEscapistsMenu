@@ -15,10 +15,6 @@ namespace TheEscapists2
                 OutfitMenu.visible = !OutfitMenu.visible;
                 WeaponMenu.visible = !WeaponMenu.visible;
             }
-            else if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                Loader.Unload();
-            }
         }
 
         internal static bool SendChatMessage(string message)
