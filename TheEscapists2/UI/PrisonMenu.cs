@@ -174,7 +174,7 @@ namespace TheEscapists2
             }
         }
 
-        private void KnockoutEveryone()
+        /*private void KnockoutEveryone()
         {
             if (!PlayerMenu.player)
                 return;
@@ -186,7 +186,7 @@ namespace TheEscapists2
                     || character.m_CharacterRole == CharacterRole.Warden || character.m_CharacterRole == CharacterRole.Dog))
                     PlayerMenu.player.DamageCharacter(character, 9999f, -1, false, Character.GamelogicRunModes.All);
             }
-        }
+        }*/
 
         private void SetOpinions()
         {

@@ -9,7 +9,7 @@ namespace TheEscapists2
         internal static bool visible = false;
         private List<BaseJob> _jobs;
         private float _lastCacheTime = Time.time + 3f;
-        internal static Rect window = new Rect(300f,300f,300f,300f);
+        internal static Rect window = new Rect(300f,300f,150f,300f);
 
         public void OnGUI()
         {
@@ -31,7 +31,11 @@ namespace TheEscapists2
             foreach (BaseJob job in _jobs)
             {
                 if (GUILayout.Button(job.m_Type.ToString(), new GUILayoutOption[0]))
-                    JobsManager.GetInstance().AssignCharacterToJob(PlayerMenu.player, job.m_Type);
+                {
+                    JobsManager jobsManager = JobsManager.GetInstance();
+                    jobsManager?.RemoveCharacterFromJob(job.m_Type);
+                    jobsManager?.AssignCharacterToJob(PlayerMenu.player, job.m_Type);
+                }
             }
         }
 
